@@ -1,10 +1,13 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 
 const apiRouter = require('./routes')
 
 const {PORT} = require('./config/server.config');
 const errorHandler = require('./utils/ErrorHandler');
+const { connect } = require('mongoose');
+const connectionToDB = require('./config/db.config');
 
 const app = express();
 
@@ -22,6 +25,9 @@ app.get("/ping" , (req , res)=>{
 //last middleware if any error comes
 app.use(errorHandler);
 
-app.listen(PORT , ()=>{
+app.listen(PORT , async ()=>{
     console.log("Server started at " , PORT);
+    await connectionToDB()
+    console.log('Successfully connected to DB');
 })
+
