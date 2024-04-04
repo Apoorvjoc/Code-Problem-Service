@@ -1,9 +1,19 @@
-const { statusCodes } = require('http-status-codes')
+const { statusCodes, StatusCodes } = require('http-status-codes')
 const NotImplemented = require('../errors/notImplemented.error')
+const { ProblemService } = require('../services');
+const { ProblemRepository } = require('../repositories')
 
-function addProblem(req , res , next){
+const problemService = new ProblemService( new ProblemRepository())
+
+async function addProblem(req , res , next){
     try {
-        throw new NotImplemented("addProblem")
+        const newProblem = await problemService.createProblem(req.body)
+        return res.status(StatusCodes.CREATED).json({
+            success: true,
+            message: 'Successfully created a new problem',
+            error: {},
+            data : newProblem 
+        })
         // throw means we are sending err from this try to catch(error)
     } catch (error) {
         next(error) 
@@ -22,9 +32,15 @@ function getProblem(req , res , next){
     }
 }
 
-function getProblems(req , res , next){
+async function getProblems(req , res , next){
     try {
-        throw new NotImplemented("getProblems")
+        const problems = await problemService.getAllProblems();
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            message: 'Successfully fetched problems',
+            error: {},
+            data : problems 
+        })
     } catch (error) {
         next(error)
     }
