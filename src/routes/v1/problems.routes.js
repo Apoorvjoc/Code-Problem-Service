@@ -12,7 +12,7 @@ problemRouter.get('/' , problemController.getProblems);
 
 problemRouter.post('/' , problemController.addProblem);
 
-problemRouter.delete('/' , problemController.deleteProblem);
+problemRouter.delete('/:id' , problemController.deleteProblem);
 
 problemRouter.put('/' , problemController.updateProblem);
 

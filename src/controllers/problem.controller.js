@@ -1,7 +1,8 @@
 const { statusCodes, StatusCodes } = require('http-status-codes')
 const NotImplemented = require('../errors/notImplemented.error')
 const { ProblemService } = require('../services');
-const { ProblemRepository } = require('../repositories')
+const { ProblemRepository } = require('../repositories');
+const logger = require('../config/logger.config');
 
 const problemService = new ProblemService( new ProblemRepository())
 
@@ -24,9 +25,15 @@ async function addProblem(req , res , next){
     }
 }
 
-function getProblem(req , res , next){
+async function getProblem(req , res , next){
     try {
-        throw new NotImplemented("getProblem")
+        const problem = await problemService.getProblemById(req.params.id)
+        return res.status(StatusCodes.OK).json({
+            success: true,
+            error : {},
+            message: "Successfully fetched problem",
+            data: problem
+        })
     } catch (error) {
         next(error)
     }
@@ -46,9 +53,10 @@ async function getProblems(req , res , next){
     }
 }
 
-function deleteProblem(req , res , next){
+async function deleteProblem(req , res , next){
     try {
-        throw new NotImplemented("deleteProblem")
+        logger.info(` Deleting for ID : ${req.params.id}`)
+        return await problemService.deleteProblemById(req.params.id)
     } catch (error) {
         next(error)
     }
